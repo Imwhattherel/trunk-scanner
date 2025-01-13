@@ -6,7 +6,7 @@
       "Channels": [
         {
           "Alias": "Central",
-          "Tgid": "5601",
+          "Tgid": "1001",
           "Frequency": null,
           "Mode": 0
         },

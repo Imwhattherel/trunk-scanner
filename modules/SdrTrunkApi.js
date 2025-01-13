@@ -1,17 +1,16 @@
-const fs = require('fs');
-const path = require('path');
-const express = require('express');
-const multer = require('multer');
+import fs from 'fs';
+import path from 'path';
+import express from 'express';
+import multer from 'multer';
 
-const callData = require("./callData");
-const DiscordWebhook = require("./DiscordWebhook");
-
-const LtrCallData = require("../models/LtrCallData");
-const P25CallData = require("../models/P25CallData");
-const DmrCallData = require("../models/DmrCallData");
-const DiscordBot = require("./DiscordBot");
-const {transcribeAudio} = require("./transcribeAudio");
-const UdpSender = require("./UdpSender");
+import callData from './callData.js';
+import DiscordWebhook from './DiscordWebhook.js';
+import LtrCallData from '../models/LtrCallData.js';
+import P25CallData from '../models/P25CallData.js';
+import DmrCallData from '../models/DmrCallData.js';
+import DiscordBot from './DiscordBot.js';
+import { transcribeAudio } from './transcribeAudio.js';
+import UdpSender from './UdpSender.js';
 
 class SdrTrunkApi {
     constructor(io, config, baseUploadPath) {
@@ -41,10 +40,10 @@ class SdrTrunkApi {
         this.upload = multer({ dest: 'uploads/tmp/' });
 
         this.app.post('/api/call-upload', this.upload.any(), async (req, res) => {
-/*            console.log('Headers:', req.headers);
+            console.log('Headers:', req.headers);
             console.log('Files:', req.files);
             console.log('Body:', req.body);
-            console.log("Received call data");*/
+            console.log("Received call data");
             const {key, system, test} = req.body;
 
             const systemConfig = config.systems.find(s => s.id.toString() === system && s.enabled);
@@ -152,4 +151,4 @@ class SdrTrunkApi {
     }
 }
 
-module.exports = SdrTrunkApi;
+export default SdrTrunkApi;

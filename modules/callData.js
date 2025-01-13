@@ -1,4 +1,4 @@
-function isP25Call(call) {
+export function isP25Call(call) {
     if (!call.talkgroup.length <= 5 && parseInt(call.talkgroup) < 65535) {
         return true;
     }
@@ -7,7 +7,7 @@ function isP25Call(call) {
     return false;
 }
 
-function isDmrCall(call) {
+export function isDmrCall(call) {
     if (!call.talkgroup.length <= 8 && parseInt(call.talkgroup) < 16777215) {
         return true;
     }
@@ -16,7 +16,7 @@ function isDmrCall(call) {
     return false;
 }
 
-function isLtrCall(call) {
+export function isLtrCall(call) {
     if (call.talkgroup.length < 6) {
         return false;
     }
@@ -43,8 +43,4 @@ function isLtrCall(call) {
     return true;
 }
 
-module.exports = {
-    isP25Call,
-    isDmrCall,
-    isLtrCall
-}
+export default isP25Call;

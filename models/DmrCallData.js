@@ -14,4 +14,4 @@ class DmrCallData {
     }
 }
 
-module.exports = DmrCallData;
+export default DmrCallData;

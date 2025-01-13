@@ -1,7 +1,7 @@
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-const fs = require('fs');
+import fs from 'fs';
+import fetch from 'node-fetch';
 
-async function transcribeAudio(filePath, assemblyApiKey) {
+export async function transcribeAudio(filePath, assemblyApiKey) {
     const uploadResponse = await fetch('https://api.assemblyai.com/v2/upload', {
         method: 'POST',
         headers: {
@@ -44,6 +44,3 @@ async function transcribeAudio(filePath, assemblyApiKey) {
         throw new Error('Transcription failed');
     }
 }
-module.exports = {
-    transcribeAudio,
-};

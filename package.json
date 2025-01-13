@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "bin": "app.js",
+  "type": "module",
   "scripts": {
     "start": "node app.js -c configs/config.yml",
     "build": "pkg . -o ./bin/trunk-scanner",

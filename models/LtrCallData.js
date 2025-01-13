@@ -29,4 +29,4 @@ class LtrCallData {
 
 }
 
-module.exports = LtrCallData;
+export default LtrCallData;

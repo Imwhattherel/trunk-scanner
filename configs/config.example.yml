@@ -17,6 +17,9 @@ sdrtrunk: # SDRTrunk Server. May work with other software's out there, untested
   port: 3000
   bindAddress: 0.0.0.0
 
+whackerlink:
+  enabled: true
+
 transcribe:
   assemblyai:
     enabled: true
@@ -46,11 +49,19 @@ discord:
     url: "https://discord.com/api/webhooks/"
 
 systems:
+    # Example SDR Trunk system
     - id: 500
       enabled: true
-      type: "sdrtrunk" # sdrtrunk is the only supported type
+      type: "sdrtrunk" # sdrtrunk and whackerlink are supported types
       alias: "test system"
       apiKey: "1"
+    # Example WhackerLink system
+    - id: 501
+      enabled: true
+      type: "whackerlink"
+      alias: "whacker"
+      port: 3000
+      address: localhost
 
 groups:
   - name: "LTR Site"

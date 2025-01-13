@@ -1,8 +1,8 @@
-const dgram = require('dgram');
-const fs = require('fs');
-const path = require('path');
-const P25CallData = require('../models/P25CallData');
-const UdpSender = require("./UdpSender");
+import dgram from 'dgram';
+import fs from 'fs';
+import path from 'path';
+import P25CallData from '../models/P25CallData.js';
+import UdpSender from './UdpSender.js';
 
 class UdpReceiver {
     constructor(io, config, baseUploadPath) {
@@ -96,4 +96,4 @@ class UdpReceiver {
     }
 }
 
-module.exports = UdpReceiver;
+export default UdpReceiver;

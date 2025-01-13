@@ -1,11 +1,15 @@
-const fs = require('fs');
-const path = require('path');
-const express = require('express');
-const http = require('http');
-const {Server} = require("socket.io");
+import path from 'path';
+import express from 'express';
+import http from 'http';
+import { Server } from 'socket.io';
+import fs from 'fs';
+import {fileURLToPath} from "url";
 
 class WebServer {
     constructor(config) {
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = path.dirname(__filename);
+
         this.port = config.web.port || 4000;
         this.bindAddress = config.web.bindAddress || "0.0.0.0";
         this.debug = config.web.debug || false;
@@ -141,12 +145,19 @@ class WebServer {
 
     loadFile(filePath) {
         try {
+            console.log(`Loading file from: ${filePath}`);
+
+            if (!fs.existsSync(filePath)) {
+                console.error(`File does not exist: ${filePath}`);
+                return '';
+            }
+
             return fs.readFileSync(filePath, 'utf8');
         } catch (error) {
-            console.error(`Failed to read default codeplug: ${filePath}`);
+            console.error(`Failed to read file at ${filePath}:`, error.message);
             return '';
         }
     }
 }
 
-module.exports = WebServer;
+export default WebServer;

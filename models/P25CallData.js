@@ -14,4 +14,4 @@ class P25CallData {
     }
 }
 
-module.exports = P25CallData;
+export default P25CallData;

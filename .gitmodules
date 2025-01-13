@@ -1,0 +1,3 @@
+[submodule "WhackerLinkLibJS"]
+	path = WhackerLinkLibJS
+	url = https://github.com/WhackerLink/WhackerLinkLibJS

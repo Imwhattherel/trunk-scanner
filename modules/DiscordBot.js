@@ -1,5 +1,11 @@
-const { Client, GatewayIntentBits } = require('discord.js');
-const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus, getVoiceConnection } = require('@discordjs/voice');
+import { Client, GatewayIntentBits } from 'discord.js';
+import {
+    joinVoiceChannel,
+    createAudioPlayer,
+    createAudioResource,
+    AudioPlayerStatus,
+    getVoiceConnection
+} from '@discordjs/voice';
 
 class DiscordBot {
     constructor(token, channel, systemUrl, whitelist) {
@@ -142,4 +148,4 @@ class DiscordBot {
     }
 }
 
-module.exports = DiscordBot;
+export default DiscordBot;

@@ -24,6 +24,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const scanner = document.getElementById('scanner');
     const usersCount = document.getElementById('usersCount');
 
+    player = new PCMPlayer({
+        encoding: '16bitInt',
+        channels: 1,
+        sampleRate: 8000,
+        flushingTime: 2000,
+        onAudioEnd: audioStopped,
+        onAudioStart: audioStarted
+    });
+
     updateVolumeDisplay();
     loadPresets();
 
@@ -229,6 +238,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            data.call.frequency = hzToMhz(data.call.frequency);
+            data.call.dateTime = parseTimestamp(data.call.dateTime);
+
+            updateInfoAndPlay(data, true);
+
             player.feed(audio);
         } else if (data.type === "AUDIO_URL") {
             console.log("New AUDIO_URL call received.");
@@ -257,9 +271,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    const updateInfoAndPlay = (data) => {
+    const updateInfoAndPlay = (data, forPcm = false) => {
         console.log(`About to play audio at volume: ${audioPlayer.volume}`);
 
+        updateScannerInfo(data);
         updateScannerInfo(data);
 
         currentTalkgroup = data.call.talkgroup;
@@ -277,15 +292,20 @@ document.addEventListener('DOMContentLoaded', function () {
             extraInfo.innerText = "";
         }
 
-        isPlaying = true;
+        if (!forPcm) {
+            isPlaying = true;
+        }
+
         lightOn();
 
         if (!paused) {
             console.log(`Playing audio: TGID: ${data.call.talkgroup}, Frequency: ${data.call.frequency}, Volume: ${audioPlayer.volume}`);
 
-            audioPlayer.src = data.audio;
-            audioPlayer.load();
-            audioPlayer.play().catch(e => console.error('Error playing audio:', e));
+            if (!forPcm) {
+                audioPlayer.src = data.audio;
+                audioPlayer.load();
+                audioPlayer.play().catch(e => console.error('Error playing audio:', e));
+            }
         }
     };
 

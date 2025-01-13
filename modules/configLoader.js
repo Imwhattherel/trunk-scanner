@@ -1,8 +1,8 @@
-const fs = require('fs');
-const yaml = require('js-yaml');
-const path = require('path');
+import fs from 'fs';
+import yaml from 'js-yaml';
+import path from 'path';
 
-function loadConfig(configPath) {
+export function loadConfig(configPath) {
     try {
         const filePath = configPath || path.join(__dirname, '../configs/config.yml');
         const fileContents = fs.readFileSync(filePath, 'utf8');
@@ -12,7 +12,3 @@ function loadConfig(configPath) {
         return null;
     }
 }
-
-module.exports = {
-    loadConfig
-};

@@ -13,6 +13,8 @@ const ControlHeadTypes = new Enum({
     O9: 3
 });
 
+let isPcmPlaying = false;
+
 const socket = io();
 
 export class ApxRadioApp {
@@ -23,6 +25,15 @@ export class ApxRadioApp {
         let powerState = false;
 
         this.codeplug = new Codeplug();
+
+        this.player = new PCMPlayer({
+            encoding: '16bitInt',
+            channels: 1,
+            sampleRate: 8000,
+            flushingTime: 2000,
+            onAudioEnd: audioStopped,
+            onAudioStart: audioStarted
+        });
 
         this.actualRadioModel = actualModel;
         this.defaultCodeplug = defaultCodeplug;
@@ -86,7 +97,7 @@ export class ApxRadioApp {
             }
         });
 
-        const updateInfoAndPlay = (data) => {
+        const updateInfoAndPlay = (data, isPcm = false) => {
             const srcId = data.call.source;
             this.isplaying = true;
             let currentZone = this.codeplug.Zones[this.currentZoneIndex];
@@ -110,14 +121,16 @@ export class ApxRadioApp {
 
             console.log(`Playing audio: TGID: ${data.call.talkgroup}, Frequency: ${data.call.frequency}, Volume: ${audioPlayer.volume}`);
 
-            audioPlayer.src = data.audio;
-            audioPlayer.load();
-            audioPlayer.play().catch(async e => {
-                await this.stop();
-                startBlinkingLed(150);
-                document.getElementById("line1").innerText = "FL 01/81";
-                console.error('Error playing audio:', e)
-            });
+            if (!isPcm) {
+                audioPlayer.src = data.audio;
+                audioPlayer.load();
+                audioPlayer.play().catch(async e => {
+                    await this.stop();
+                    startBlinkingLed(150);
+                    document.getElementById("line1").innerText = "FL 01/81";
+                    console.error('Error playing audio:', e)
+                });
+            }
         };
 
         socket.on('new_call', (data) => {
@@ -128,9 +141,29 @@ export class ApxRadioApp {
                 return;
             }
 
-            if (data.type === "WAV_STREAM" && player) {
-                // TODO: Add later
-                console.log("New WAV_STREAM call received.");
+            if (data.type === "WAV_STREAM" && this.player) {
+                let currentZone = this.codeplug.Zones[this.currentZoneIndex];
+                let currentChannel = currentZone.Channels[this.currentChannelIndex];
+
+                let audio = new Uint8Array(data.audio);
+                console.log("New WAV_STREAM call.");
+
+
+                const isconventional = false;
+                const istrunking = true;
+
+                if (!this.isscanenabled && ((istrunking && data.call.talkgroup !== currentChannel.Tgid) || (isconventional && currentChannel.Frequency.toString() !== data.call.frequency))) {
+                    console.log(`Talkgroup ${data.call.talkgroup} is not the current channel or frequncy ${parseInt(data.call.frequency)} is not the current Frequency Skipping...`);
+                    return;
+                }
+                if (this.isscanenabled && ((istrunking && !this.isTgidInCurrentScanList(data.call.talkgroup)) || (isconventional && !this.isFrequencyInCurrentScanList(data.call.frequency)))){
+                    console.log(`Talkgroup ${data.call.talkgroup} is not in the scan list or Frequency: ${data.call.frequency} is not in list. Skipping...`);
+                    return;
+                }
+
+                updateInfoAndPlay(data, true);
+
+                this.player.feed(audio);
             } else if (data.type === "AUDIO_URL") {
                 console.log("New AUDIO_URL call received.");
                 let currentZone = this.codeplug.Zones[this.currentZoneIndex];
@@ -941,6 +974,16 @@ function stopSoundEffect() {
     const player = document.getElementById('soundEffectsPlayer');
     player.pause();
     player.currentTime = 0;
+}
+
+function audioStopped() {
+    isPcmPlaying = false;
+    console.debug("STREAM audio stopped");
+}
+
+function audioStarted() {
+    isPcmPlaying = true;
+    console.debug("STREAM audio started");
 }
 
 function isJsonValid(jsonString) {

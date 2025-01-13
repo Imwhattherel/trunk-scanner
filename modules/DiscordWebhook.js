@@ -1,4 +1,4 @@
-const axios = require('axios');
+import axios from 'axios';
 
 class DiscordWebhook {
     constructor(config) {
@@ -46,4 +46,4 @@ class DiscordWebhook {
     }
 }
 
-module.exports = DiscordWebhook;
+export default DiscordWebhook;

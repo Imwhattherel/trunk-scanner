@@ -1,4 +1,4 @@
-const dgram = require('dgram');
+import dgram from 'dgram';
 
 class UdpSender {
     constructor(dstAddress, port, debug) {
@@ -31,4 +31,4 @@ class UdpSender {
     }
 }
 
-module.exports = UdpSender;
+export default UdpSender;
