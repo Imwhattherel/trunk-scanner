@@ -65,7 +65,7 @@ html, body {
     font-family: Helvetica, serif;
     font-weight: bold;
     text-align: center;
-    background-color: white;
+    background: transparent;
     width: 232px;
 }
 
